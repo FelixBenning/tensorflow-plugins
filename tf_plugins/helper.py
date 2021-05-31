@@ -22,3 +22,10 @@ class LazyClassMapping(Mapping, Generic[T]):
     
     def __len__(self) -> int:
         return len(self._class_mapping) 
+    
+    def __repr__(self) -> str:
+        return self.__class__.__name__ + f"({repr(self._class_mapping)})"
+    
+    def __str__(self) -> str:
+        return str(self._class_mapping)
+    
