@@ -15,5 +15,9 @@ setup(
     packages=["tf_plugins"],
     install_requires=[
         "tensorflow~=2.5",
-    ]
+    ],
+    entry_points="""
+        [tensorflow.optimizers]
+        SGD = tensorflow.keras.optimizers:SGD
+    """ 
 )

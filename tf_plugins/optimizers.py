@@ -1,31 +1,27 @@
-from tensorflow.keras.optimizers import *
-_GLOBALS_CACHE = list(globals().keys())
-_ALL_CACHE = (g for g in _GLOBALS_CACHE if not g[0]=='_')
+_BUILTINS_CACHE = list(globals().keys())
 
-from itertools import chain
-import importlib.metadata
-import tensorflow as tf
-from typing import Generator, Tuple
+# import existing optimizer namespace
+from tensorflow.keras.optimizers import Optimizer, serialize, deserialize, get, schedules
 
-_PLUGINS = {
-    plugin.attr : plugin.module for plugin in
-    importlib.metadata.entry_points().get("tensorflow.optimizers", [])
-}
+# avoid polluting the globals namespace with helpers (see __all__ definition)
+from tf_plugins.helper import LazyClassMapping as _LazyClassMapping
+from importlib.metadata import entry_points as _entry_points
+from itertools import chain as _chain
 
-__all__ = list(set(chain(_ALL_CACHE, _PLUGINS.keys())))
+all_optimizers = _LazyClassMapping(
+    _entry_points().get("tensorflow.optimizers", [])
+)
 
 def __getattr__(name: str) -> Optimizer:
-    return getattr(
-        importlib.import_module(_PLUGINS[name]), 
-        name
-    )
+    try:
+        return all_optimizers[name]
+    except KeyError as e:
+        raise AttributeError(str(e)) from None
 
 def __dir__() -> list[str]:
-    return list(set(chain(_GLOBALS_CACHE, __all__)))
+    return list(set(_chain(_BUILTINS_CACHE, __all__)))
 
-def all_optimizers() -> Generator[Tuple[str, Optimizer], None, None]:
-    return ((name, __getattr__(name)) for name in _PLUGINS.keys())
-
-if __name__ == "__main__":
-    opts = all_optimizers()
-    pass
+__all__ = list(set(_chain(
+    (g for g in globals().keys() if not g[0]=='_'), # default
+    all_optimizers.keys() # additional
+)))
