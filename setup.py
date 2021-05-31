@@ -26,5 +26,12 @@ setup(
         SGD = tensorflow.keras.optimizers:SGD
         Nadam = tensorflow.keras.optimizers:Nadam
         RMSprop = tensorflow.keras.optimizers:RMSprop
+
+        [tensorflow.layers]
+        AbstractRNNCell = tensorflow.python.keras.layers.recurrent:AbstractRNNCell
+        RNN = tensorflow.python.keras.layers.recurrent:RNN
+        SimpleRNN = tensorflow.python.keras.layers.recurrent:SimpleRNN
+        SimpleRNNCell = tensorflow.python.keras.layers.recurrent:SimpleRNNCell
+        StackedRNNCell = tensorflow.python.keras.layers.recurrent:StackedRNNCell
     """ 
 )
