@@ -18,6 +18,13 @@ setup(
     ],
     entry_points="""
         [tensorflow.optimizers]
+        Adadelta = tensorflow.keras.optimizers:Adadelta
+        Adagrad = tensorflow.keras.optimizers:Adagrad
+        Adam = tensorflow.keras.optimizers:Adam
+        Adamax = tensorflow.keras.optimizers:Adamax
+        Ftrl = tensorflow.keras.optimizers:Ftrl
         SGD = tensorflow.keras.optimizers:SGD
+        Nadam = tensorflow.keras.optimizers:Nadam
+        RMSprop = tensorflow.keras.optimizers:RMSprop
     """ 
 )
