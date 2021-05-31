@@ -8,7 +8,7 @@ from tf_plugins.helper import LazyClassMapping as _LazyClassMapping
 from importlib.metadata import entry_points as _entry_points
 from itertools import chain as _chain
 
-all_optimizers = _LazyClassMapping(
+all_optimizers = _LazyClassMapping[Optimizer](
     _entry_points().get("tensorflow.optimizers", [])
 )
 

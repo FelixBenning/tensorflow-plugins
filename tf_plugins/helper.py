@@ -1,21 +1,23 @@
 import importlib
 from importlib.metadata import EntryPoint
-from tensorflow.keras.optimizers import Optimizer
 
 from collections.abc import Mapping, Sequence, Iterator
 
+from typing import TypeVar, Generic
 
-class LazyClassMapping(Mapping):
+T = TypeVar("T")
+
+class LazyClassMapping(Mapping, Generic[T]):
     def __init__(self, entrypoints:Sequence[EntryPoint]) -> None:
         self._class_mapping = {e.attr: e.module for e in entrypoints}
 
-    def __getitem__(self, key: str) -> Optimizer:
+    def __getitem__(self, key: str) -> T:
         return getattr(
             importlib.import_module(self._class_mapping[key]),
             key
         )
     
-    def __iter__(self) -> Iterator[tuple[str, Optimizer]]:
+    def __iter__(self) -> Iterator[tuple[str, T]]:
         return iter(self._class_mapping.keys())
     
     def __len__(self) -> int:
